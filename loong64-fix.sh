@@ -13,7 +13,7 @@ sed -i '/SCMP_ARCH_AARCH64/a\	"SCMP_ARCH_LOONGARCH64": "loong64",' libcontainer/
 
 # enosys_linux.go
 grep -q 'C_AUDIT_ARCH_LOONGARCH64' libcontainer/seccomp/patchbpf/enosys_linux.go || \
-sed -i '/const uint32_t C_AUDIT_ARCH_AARCH64/a\const uint32_t C_AUDIT_ARCH_LOONGARCH64  = AUDIT_ARCH_LOONGARCH64;'
+sed -i '/const uint32_t C_AUDIT_ARCH_AARCH64/a\const uint32_t C_AUDIT_ARCH_LOONGARCH64  = AUDIT_ARCH_LOONGARCH64;' libcontainer/seccomp/patchbpf/enosys_linux.go
 #sed -i '/C_AUDIT_ARCH_AARCH64/a\const uint32_t C_AUDIT_ARCH_LOONGARCH64  = AUDIT_ARCH_LOONGARCH64;' libcontainer/seccomp/patchbpf/enosys_linux.go
 
 sed -i '/AARCH64), nil/ a\
