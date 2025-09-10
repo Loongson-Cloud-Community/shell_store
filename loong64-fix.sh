@@ -7,6 +7,19 @@ echo "[INFO] Patching runc for loong64 support..."
 sed -i 's/\(386 amd64 arm arm64\)/\1 loong64/' Makefile
 sed -i 's/\(-a armhf\)/\1 -a loong64/' Makefile
 
+# libcontainer/system/syscall_linux_64.go
+# //go:build linux && (arm64 || amd64 || mips || mipsle || mips64 || mips64le || ppc || ppc64 || ppc64le || riscv64 || s390x)
+#// +build linux
+#// +build arm64 amd64 mips mipsle mips64 mips64le ppc ppc64 ppc64le riscv64 s390x
+file="libcontainer/system/syscall_linux_64.go"
+echo "[INFO] Patching $file for loong64 support..."
+# 1. 修改 //go:build 行
+sed -i 's/arm64 || amd64 || mips || mipsle || mips64 || mips64le || ppc || ppc64 || ppc64le || riscv64 || s390x/arm64 || amd64 || mips || mipsle || mips64 || mips64le || ppc || ppc64 || ppc64le || riscv64 || s390x || loong64/' "$file"
+# 2. 修改 // +build 行
+sed -i 's/arm64 amd64 mips mipsle mips64 mips64le ppc ppc64 ppc64le riscv64 s390x/arm64 amd64 mips mipsle mips64 mips64le ppc ppc64 ppc64le riscv64 s390x loong64/' "$file"
+echo "[INFO] $file patched successfully."
+
+
 # config.go
 grep -q 'SCMP_ARCH_LOONGARCH64' libcontainer/seccomp/config.go || \
 sed -i '/SCMP_ARCH_AARCH64/a\	"SCMP_ARCH_LOONGARCH64": "loong64",' libcontainer/seccomp/config.go
