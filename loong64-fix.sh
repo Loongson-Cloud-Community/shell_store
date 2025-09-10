@@ -12,13 +12,15 @@ sed -i 's/\(-a armhf\)/\1 -a loong64/' Makefile
 #// +build linux
 #// +build arm64 amd64 mips mipsle mips64 mips64le ppc ppc64 ppc64le riscv64 s390x
 file="libcontainer/system/syscall_linux_64.go"
-echo "[INFO] Patching $file for loong64 support..."
-# 1. 修改 //go:build 行
-sed -i 's/arm64 || amd64 || mips || mipsle || mips64 || mips64le || ppc || ppc64 || ppc64le || riscv64 || s390x/arm64 || amd64 || mips || mipsle || mips64 || mips64le || ppc || ppc64 || ppc64le || riscv64 || s390x || loong64/' "$file"
-# 2. 修改 // +build 行
-sed -i 's/arm64 amd64 mips mipsle mips64 mips64le ppc ppc64 ppc64le riscv64 s390x/arm64 amd64 mips mipsle mips64 mips64le ppc ppc64 ppc64le riscv64 s390x loong64/' "$file"
-echo "[INFO] $file patched successfully."
-
+if [ -f "$file" ]; then
+    echo "[INFO] Patching $file for loong64 support..."
+    # 修改 //go:build 行
+    sed -i 's/arm64 || amd64 || mips || mipsle || mips64 || mips64le || ppc || ppc64 || ppc64le || riscv64 || s390x/arm64 || amd64 || mips || mipsle || mips64 || mips64le || ppc || ppc64 || ppc64le || riscv64 || s390x || loong64/' "$file"
+    # 修改 // +build 行
+    sed -i 's/arm64 amd64 mips mipsle mips64 mips64le ppc ppc64 ppc64le riscv64 s390x/arm64 amd64 mips mipsle mips64 mips64le ppc ppc64 ppc64le riscv64 s390x loong64/' "$file"
+else
+    echo "[INFO] $file does not exist, skipping patch."
+fi
 
 # config.go
 grep -q 'SCMP_ARCH_LOONGARCH64' libcontainer/seccomp/config.go || \
